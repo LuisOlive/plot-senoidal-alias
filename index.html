@@ -11,54 +11,51 @@
 <form id="form">
   <label for="eq">Enter an equation:</label>
   <input type="text" id="eq" value="sin(120 pi x / 1000)" />
+
+  <label for="period">Enter a period (ms):</label>
+  <input type="number" id="period" value="50" />
   <input type="submit" value="Draw" />
 </form>
 
 <div id="plot"></div>
-
-<p>
-  Used plot library: <a href="https://plot.ly/javascript/">Plotly</a>
-</p>
 
 <script>
   
   
   function draw() {
     try {
-      // compile the expression once
       const expression = document.getElementById('eq').value
+      const T = parseInt(document.getElementById('period').value)
       const expr = math.compile(expression)
 
       function evaluar(x) {
         return expr.evaluate({x})
       }
 
-      // evaluate the expression repeatedly for different values of x
-      const xValues = math.range(0,100.1,.5).toArray()
-      
-      const yValues = xValues.map(evaluar)
+      function trazar(f) {
+        const x = math.range(0,T+1,1000/f).toArray()
+        const y = x.map(evaluar)
 
-      // tomando las muestras para el alias
-      const xMuestras = xValues.filter(x => !(x % 15))
-
-      const yMuestras = xMuestras.map(evaluar)
-
-      // render the plot using plotly
-      const trace1 = {
-        x: xValues,
-        y: yValues,
-        type: 'scatter'
-      }
-
-      const trazoMuestras = {
-        x: xMuestras, 
-        y: yMuestras,
-        type: 'scatter'
+        return {x,y,type:'trace', name:`${f} Hz`}
       }
       
-      const data = [trace1, trazoMuestras]
+      const data = [
+        trazar(60),
+        trazar(62),
+        trazar(65),
+        trazar(67),
+        trazar(70),
+        trazar(80),
+        trazar(90),
+        trazar(100),
+        trazar(120),
+        trazar(180),
+        trazar(300),
+        trazar(600),
+        trazar(3000)
+      ]
+      
       Plotly.newPlot('plot', data)
-
     }
     catch (err) {
       console.error(err)

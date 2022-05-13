@@ -1,3 +1,4 @@
+/*
 html, body {
   height: 100%;
   width: 100%;
@@ -17,3 +18,8 @@ input[type=text] {
     form {
       margin: 20px 0;
     }
+
+#plot {
+  height: 100vh;
+}
+*/
